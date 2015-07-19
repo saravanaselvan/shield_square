@@ -10,6 +10,14 @@ module ShieldSquare
 	    [a.scheme, a.userinfo, a.host, a.port, nil, a.path, nil, a.query, a.fragment]
 	  end
 	end
+
+	mattr_accessor :ss2_domain
+	mattr_accessor :sid
+	mattr_accessor :mode
+	mattr_accessor :async_http_post
+	mattr_accessor :timeout_value
+	mattr_accessor :js_url
+	
   def self.setup
     yield self
   end
