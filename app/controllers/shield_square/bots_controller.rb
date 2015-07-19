@@ -4,7 +4,7 @@ module ShieldSquare
 		skip_before_filter :post_to_shield_square
 	
 		def create
-			if params['jsonString']!=""
+			if params['jsonString'] != ""
 				data = params['jsonString']
 				data.delete! '\\'
 				data.delete! '['
