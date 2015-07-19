@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = ShieldSquare::VERSION
   spec.authors       = ["Saravanaselvan"]
   spec.email         = ["spsaravanaselvan@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Connect with shield square bot detection API}
+  spec.description   = %q{Connect with shield square bot detection API}
   spec.homepage      = ""
   spec.license       = "MIT"
 
