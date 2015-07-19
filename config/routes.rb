@@ -1,3 +1,3 @@
-Rails.application.routes.draw do
+ShieldSquare::Engine.routes.draw do
   resource :bots
 end
