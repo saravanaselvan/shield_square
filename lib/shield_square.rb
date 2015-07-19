@@ -57,6 +57,7 @@ module ShieldSquare
 	$IP_ADDRESS
 
 	def self.shieldsquare_ValidateRequest( shieldsquare_username, shieldsquare_calltype, request, cookies ) 
+		Rails.logger.debug ShieldSquare.config
 		shieldsquare_low  = 10000
 		shieldsquare_high = 99999
 		shieldsquare_a = 1
