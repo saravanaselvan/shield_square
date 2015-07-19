@@ -93,8 +93,8 @@ module ShieldSquare
 				shieldsquare_uzmc=shieldsquare_uzmc[shieldsquare_e..shieldsquare_e+1]
 				shieldsquare_a = ((shieldsquare_uzmc.to_i-shieldsquare_c)/shieldsquare_b) + shieldsquare_d
 				shieldsquare_uzmc= rand(shieldsquare_low..shieldsquare_high).to_s + (shieldsquare_c+shieldsquare_a*shieldsquare_b).to_s + rand(shieldsquare_low..shieldsquare_high).to_s
-				cookies.__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
-				cookies.__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
+				cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
+				cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
 				$ShieldsquareRequest__uzma = cookies["__uzma"]
 				$ShieldsquareRequest__uzmb = cookies["__uzmb"]
 				$ShieldsquareRequest__uzmc = shieldsquare_uzmc
@@ -107,10 +107,10 @@ module ShieldSquare
 				shieldsquare_uzma = id.to_i(36).to_s
 				shieldsquare_lastaccesstime = Time.now.to_i
 				shieldsquare_uzmc= rand(shieldsquare_low..shieldsquare_high).to_s + (shieldsquare_c+shieldsquare_a*shieldsquare_b).to_s + rand(shieldsquare_low..shieldsquare_high).to_s
-				cookies.__uzma] = { :value => shieldsquare_uzma, :expires => Time.now + 3600*24*365*10} 
-				cookies.__uzmb] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
-				cookies.__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
-				cookies.__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
+				cookies[:__uzma] = { :value => shieldsquare_uzma, :expires => Time.now + 3600*24*365*10} 
+				cookies[:__uzmb] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
+				cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
+				cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
 				$ShieldsquareRequest__uzma = shieldsquare_uzma
 				$ShieldsquareRequest__uzmb = Time.now.to_i
 				$ShieldsquareRequest__uzmc = shieldsquare_uzmc
@@ -125,7 +125,7 @@ module ShieldSquare
 			$ShieldsquareRequest_zpsbd2 = shieldsquare_pid
 			$ShieldsquareRequest_zpsbd3 = request.headers['HTTP_REFERER']
 			$ShieldsquareRequest_zpsbd4 = request.headers['REQUEST_URI']
-			$ShieldsquareRequest_zpsbd5 = request.session_options.id]
+			$ShieldsquareRequest_zpsbd5 = request.session_options[:id]
 			$ShieldsquareRequest_zpsbd6 = $IP_ADDRESS
 			$ShieldsquareRequest_zpsbd7 = request.headers['HTTP_USER_AGENT']
 			$ShieldsquareRequest_zpsbd8 = shieldsquare_calltype
