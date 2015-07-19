@@ -17,7 +17,7 @@ module ShieldSquare
 	mattr_accessor :async_http_post
 	mattr_accessor :timeout_value
 	mattr_accessor :js_url
-	
+
   def self.setup
     yield self
   end
@@ -59,7 +59,6 @@ module ShieldSquare
 	$IP_ADDRESS
 
 	def self.shieldsquare_ValidateRequest( shieldsquare_username, shieldsquare_calltype, request, cookies ) 
-		Rails.logger.debug ShieldSquare.config
 		shieldsquare_low  = 10000
 		shieldsquare_high = 99999
 		shieldsquare_a = 1
@@ -68,10 +67,10 @@ module ShieldSquare
 		shieldsquare_d = 1
 		shieldsquare_e = 5
 		shieldsquare_f = 10
-		shieldsquare_service_url = "http://" + ShieldSquare.config.ss2_domain + "/getRequestData"
+		shieldsquare_service_url = "http://" + @@ss2_domain + "/getRequestData"
 		$IP_ADDRESS = request.remote_ip
 		
-		if ShieldSquare.config.timeout_value > 1000
+		if @@timeout_value > 1000
 			puts "Content-type: text/html"
 			puts ''
 			puts 'ShieldSquare Timeout cant be greater then 1000 Milli seconds'
@@ -79,7 +78,7 @@ module ShieldSquare
 		end	
 		
 		if shieldsquare_calltype == 1 
-			shieldsquare_pid = shieldsquare_generate_pid ShieldSquare.config.sid
+			shieldsquare_pid = shieldsquare_generate_pid @@sid
 		else
 		
 			if  shieldsquare_pid.length == 0
@@ -125,7 +124,7 @@ module ShieldSquare
 		else
 			$ShieldsquareRequest_zpsbd0 = false;
 		end
-		$ShieldsquareRequest_zpsbd1 = ShieldSquare.config.sid
+		$ShieldsquareRequest_zpsbd1 = @@sid
 		$ShieldsquareRequest_zpsbd2 = shieldsquare_pid
 		$ShieldsquareRequest_zpsbd3 = request.headers['HTTP_REFERER']
 		$ShieldsquareRequest_zpsbd4 = request.headers['REQUEST_URI']
@@ -139,10 +138,10 @@ module ShieldSquare
 
 		shieldsquare_json_obj = JSON.generate(my_hash)
 		$ShieldsquareResponse_pid = shieldsquare_pid
-		$ShieldsquareResponse_url = ShieldSquare.config.js_url
+		$ShieldsquareResponse_url = @@js_url
 
-		if ShieldSquare.config.mode == 'Active'
-			shieldsquareCurlResponseCode=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,ShieldSquare.config.timeout_value
+		if @@mode == 'Active'
+			shieldsquareCurlResponseCode=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value
 			if shieldsquareCurlResponseCode['response'] != 200
 				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
 				$ShieldsquareResponse_reason = shieldsquareCurlResponseCode['output']
@@ -169,7 +168,7 @@ module ShieldSquare
 		else
 			
 			if $_async_http_post == true
-				asyncresponse=shieldsquare_post_async shieldsquare_service_url, shieldsquare_json_obj,ShieldSquare.config.timeout_value.to_s
+				asyncresponse=shieldsquare_post_async shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value.to_s
 				if asyncresponse['response'] == false
 					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
 					$ShieldsquareResponse_reason = "Request Timed Out/Server Not Reachable"
@@ -177,7 +176,7 @@ module ShieldSquare
 					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW
 				end
 			else
-				syncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,ShieldSquare.config.timeout_value
+				syncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value
 				if syncresponse['response'] != 200
 					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
 					$ShieldsquareResponse_reason = syncresponse['output']
@@ -218,7 +217,7 @@ module ShieldSquare
 	def self.shieldsquare_generate_pid(shieldsquare_sid)
 		t=microtime
 		dt=t.split(" ")
-		p = ShieldSquare.config.sid.split("-")
+		p = @@sid.split("-")
 		sid_min = p[3].to_i(16)
 		rmstr1=("00000000"+(dt[1].to_i).to_s(16)).split(//).last(4).join("").to_s
 		rmstr2=("0000" + ((dt[0].to_f * 65536).round).to_s(16)).split(//).last(4).join("").to_s
