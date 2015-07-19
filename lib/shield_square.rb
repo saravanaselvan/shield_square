@@ -10,14 +10,8 @@ module ShieldSquare
 	    [a.scheme, a.userinfo, a.host, a.port, nil, a.path, nil, a.query, a.fragment]
 	  end
 	end
-	class << self
-    def setup
-      yield config
-    end
-
-    def config
-      @config ||= Configuration.new
-    end
+  def self.setup
+    yield self
   end
 	#Request Variables
 	$ShieldsquareRequest_zpsbd0 = false
