@@ -1,4 +1,7 @@
 require "shield_square/version"
+require 'cgi'
+require 'rest-client'
+require 'addressable/uri'
 
 module ShieldSquare
 	class URI::Parser
