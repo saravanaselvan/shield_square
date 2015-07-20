@@ -57,9 +57,9 @@ module ShieldSquare
 	$ShieldsquareCodes_FFD   = 4
 	$ShieldsquareCodes_ALLOW_EXP = -1
 
-	$IP_ADDRESS
+	$IP_ADDRESS = ""
 
-	def self.shieldsquare_ValidateRequest( shieldsquare_username, shieldsquare_calltype, request, cookies ) 
+	def self.shieldsquare_ValidateRequest( shieldsquare_username, shieldsquare_calltype, shieldsquare_pid, request ) 
 		shieldsquare_low  = 10000
 		shieldsquare_high = 99999
 		shieldsquare_a = 1
@@ -70,7 +70,8 @@ module ShieldSquare
 		shieldsquare_f = 10
 		shieldsquare_service_url = "http://" + @@ss2_domain + "/getRequestData"
 		$IP_ADDRESS = request.remote_ip
-		
+		cookies = request.cookies
+
 		if @@timeout_value > 1000
 			puts "Content-type: text/html"
 			puts ''
