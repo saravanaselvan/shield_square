@@ -1,7 +1,7 @@
 require "shield_square/version"
 require 'shield_square/engine'
 require 'cgi'
-require 'rest-client'
+require 'httparty'
 require 'addressable/uri'
 
 module ShieldSquare
