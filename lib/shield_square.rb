@@ -4,7 +4,7 @@ require 'cgi'
 require 'httparty'
 require 'addressable/uri'
 
-module ss2
+module ShieldSquare
 	class URI::Parser
 	  def split url
 	    a = Addressable::URI::parse url
