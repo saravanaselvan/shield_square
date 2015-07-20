@@ -169,7 +169,7 @@ module ShieldSquare
 		else
 			
 			if @@async_http_post == true
-				asyncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value.to_s
+				asyncresponse=shieldsquare_post_async shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value.to_s
 				if asyncresponse['response'] == false
 					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
 					$ShieldsquareResponse_reason = "Request Timed Out/Server Not Reachable"
@@ -191,6 +191,15 @@ module ShieldSquare
 		shieldsquareResponse = Hash["pid" => $ShieldsquareResponse_pid, "responsecode" => $ShieldsquareResponse_responsecode,"url" => $ShieldsquareResponse_url,"reason" => $ShieldsquareResponse_reason,"dynamic_JS" =>$ShieldsquareResponse_dynamic_JS]
 		return shieldsquareResponse
 	end
+
+	def self.shieldsquare_post_async(url, payload, timeout)
+		cmd = 'curl -X POST  -H "Accept: Application/json" -H "Content-Type: application/json" -m '+ timeout + ' ' + url + " -d '"+ CGI::escape(payload) + "'"
+		output=`#{cmd}`
+
+		result = $?.success?
+		response=Hash["response"=>result,"output"=>output]
+		return response
+	end	
 
 	def self.shieldsquare_post_sync(url, payload, timeout)
 		# Sendind the Data to the ShieldSquare Server
@@ -245,7 +254,7 @@ module ShieldSquare
 		shieldsquare_request["host"] = request.remote_ip
 		shieldsquare_post_data = JSON.generate(shieldsquare_request)
 		if @@async_http_post == true
-			shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value.to_s
+			shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
 		else
 			shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
 		end		
