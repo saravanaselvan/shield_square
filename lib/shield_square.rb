@@ -168,8 +168,8 @@ module ShieldSquare
 
 		else
 			
-			if $_async_http_post == true
-				asyncresponse=shieldsquare_post_async shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value.to_s
+			if @@async_http_post == true
+				asyncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value.to_s
 				if asyncresponse['response'] == false
 					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
 					$ShieldsquareResponse_reason = "Request Timed Out/Server Not Reachable"
@@ -245,9 +245,9 @@ module ShieldSquare
 		shieldsquare_request["host"] = request.remote_ip
 		shieldsquare_post_data = JSON.generate(shieldsquare_request)
 		if @@async_http_post == true
-			ShieldSquare.shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
+			shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value.to_s
 		else
-			ShieldSquare.shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
+			shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
 		end		
 	end
 end
