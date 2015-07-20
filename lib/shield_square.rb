@@ -199,10 +199,10 @@ module ShieldSquare
 		headers['Content-Type']='application/json'
 		headers['Accept']='application/json'
 		begin
-			response = RestClient::Request.execute(:method => :post, :url => url, :headers => headers, :timeout => timeout, :payload => params)
+			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
 			# c.http_post(params)
 			# response=Hash["response"=>c.response_code,"output"=>c.body_str]
-		rescue RestClient::Exception => e
+		rescue Exception => e
 			response=Hash["response"=>0,"output"=>"Request Timed Out/Server Not Reachable"]
 		end
 		return response
