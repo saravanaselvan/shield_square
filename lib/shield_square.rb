@@ -200,8 +200,6 @@ module ShieldSquare
 		headers['Accept']='application/json'
 		begin
 			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
-			# c.http_post(params)
-			# response=Hash["response"=>c.response_code,"output"=>c.body_str]
 		rescue Exception => e
 			response=Hash["response"=>0,"output"=>"Request Timed Out/Server Not Reachable"]
 		end
