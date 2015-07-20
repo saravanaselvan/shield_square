@@ -236,7 +236,7 @@ module ShieldSquare
 		return hexx
 	end
 
-	def self.send_js_request(params)
+	def self.send_js_request(request, params)
 		data = params['jsonString']
 		url = 'http://' + @@ss2_domain + '/getss2data'
 		data.delete! '\\'
