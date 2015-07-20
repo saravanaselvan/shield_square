@@ -3,7 +3,6 @@ require 'ss2/engine'
 require 'cgi'
 require 'httparty'
 require 'addressable/uri'
-require 'em-http-request'
 
 module Ss2
 	class URI::Parser
