@@ -59,7 +59,7 @@ module Ss2
 
 	$IP_ADDRESS = ""
 
-	def self.shieldsquare_ValidateRequest( shieldsquare_username, shieldsquare_calltype, shieldsquare_pid, request ) 
+	def self.shieldsquare_ValidateRequest( shieldsquare_username, shieldsquare_calltype, shieldsquare_pid, request, cookies ) 
 		shieldsquare_low  = 10000
 		shieldsquare_high = 99999
 		shieldsquare_a = 1
@@ -90,17 +90,17 @@ module Ss2
 			end
 		end
 		
-		if request.cookies['__uzma']!="" and (request.cookies['__uzma'].to_s).length > 3
-			shieldsquare_lastaccesstime =  request.cookies['__uzmd']
+		if cookies['__uzma']!="" and (cookies['__uzma'].to_s).length > 3
+			shieldsquare_lastaccesstime =  cookies['__uzmd']
 			shieldsquare_uzmc=0
-			shieldsquare_uzmc= request.cookies['__uzmc']
+			shieldsquare_uzmc= cookies['__uzmc']
 			shieldsquare_uzmc=shieldsquare_uzmc[shieldsquare_e..shieldsquare_e+1]
 			shieldsquare_a = ((shieldsquare_uzmc.to_i-shieldsquare_c)/shieldsquare_b) + shieldsquare_d
 			shieldsquare_uzmc= rand(shieldsquare_low..shieldsquare_high).to_s + (shieldsquare_c+shieldsquare_a*shieldsquare_b).to_s + rand(shieldsquare_low..shieldsquare_high).to_s
-			request.cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
-			request.cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
-			$ShieldsquareRequest__uzma = request.cookies["__uzma"]
-			$ShieldsquareRequest__uzmb = request.cookies["__uzmb"]
+			cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
+			cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
+			$ShieldsquareRequest__uzma = cookies["__uzma"]
+			$ShieldsquareRequest__uzmb = cookies["__uzmb"]
 			$ShieldsquareRequest__uzmc = shieldsquare_uzmc
 			$ShieldsquareRequest__uzmd = shieldsquare_lastaccesstime
 		
@@ -111,10 +111,10 @@ module Ss2
 			shieldsquare_uzma = id.to_i(36).to_s
 			shieldsquare_lastaccesstime = Time.now.to_i
 			shieldsquare_uzmc= rand(shieldsquare_low..shieldsquare_high).to_s + (shieldsquare_c+shieldsquare_a*shieldsquare_b).to_s + rand(shieldsquare_low..shieldsquare_high).to_s
-			request.cookies[:__uzma] = { :value => shieldsquare_uzma, :expires => Time.now + 3600*24*365*10} 
-			request.cookies[:__uzmb] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
-			request.cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
-			request.cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
+			cookies[:__uzma] = { :value => shieldsquare_uzma, :expires => Time.now + 3600*24*365*10} 
+			cookies[:__uzmb] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
+			cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
+			cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
 			$ShieldsquareRequest__uzma = shieldsquare_uzma
 			$ShieldsquareRequest__uzmb = Time.now.to_i
 			$ShieldsquareRequest__uzmc = shieldsquare_uzmc
