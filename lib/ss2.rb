@@ -194,16 +194,12 @@ module Ss2
 	end
 
 	def self.shieldsquare_post_async(url, payload, timeout)
-		response = ""
-		EventMachine.run {
-      http = EventMachine::HttpRequest.new(url).post :body => CGI::escape(payload), :timeout => timeout
+		
+		cmd = 'curl -X POST  -H "Accept: Application/json" -H "Content-Type: application/json" -m '+ timeout + ' ' + url + " -d '"+ CGI::escape(payload) + "'"
+		output=`#{cmd}`
 
-      http.callback {
-        response = http.response
-
-        EventMachine.stop
-      }
-    }
+		result = $?.success?
+		response=Hash["response"=>result,"output"=>output]
 		return response
 	end	
 
