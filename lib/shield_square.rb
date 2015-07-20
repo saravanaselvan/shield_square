@@ -235,4 +235,21 @@ module ShieldSquare
 		end
 		return hexx
 	end
+
+	def self.send_js_request(params)
+		data = params['jsonString']
+		url = 'http://' + @@ss2_domain() + '/getss2data'
+		data.delete! '\\'
+		data.delete! '['
+		data.delete! ']'
+		shieldsquare_request = JSON.parse(data)
+		shieldsquare_request["sid"] = @@sid
+		shieldsquare_request["host"] = request.remote_ip
+		shieldsquare_post_data = JSON.generate(shieldsquare_request)
+		if ShieldSquare.@@async_http_post == true
+			ShieldSquare.shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
+		else
+			ShieldSquare.shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
+		end		
+	end
 end
