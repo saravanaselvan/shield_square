@@ -1,5 +1,5 @@
-require "shield_square/version"
-require 'shield_square/engine'
+require "ss2/version"
+require 'ss2/engine'
 require 'cgi'
 require 'httparty'
 require 'addressable/uri'
