@@ -120,7 +120,7 @@ module ShieldSquare
 			$ShieldsquareRequest__uzmc = shieldsquare_uzmc
 			$ShieldsquareRequest__uzmd = shieldsquare_lastaccesstime
 		end
-		if $_mode == 'Active'
+		if @@mode == 'Active'
 			$ShieldsquareRequest_zpsbd0 = true;
 		else
 			$ShieldsquareRequest_zpsbd0 = false;
