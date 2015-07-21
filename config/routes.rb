@@ -1,3 +1,5 @@
 Rails.application.routes.draw do
-  resource :get_data, :path => "getData"
+	namespace "ss2" do
+  	resource :get_data, :path => "getData"
+	end
 end
