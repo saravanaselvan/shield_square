@@ -1,4 +1,4 @@
-ShieldSquare.setup do |config|
+Ss2.setup do |config|
 	# Set the ShieldSquare domain based on your Server Locations
 
 	#Asia/India - ss_sa.shieldsquare.net
@@ -24,6 +24,5 @@ ShieldSquare.setup do |config|
 	config.timeout_value = 500
 
 	#* Enter the URL fo the JavaScript Data Collector
-	config.js_url = '/getData.rb'
+	config.js_url = '/getData'
 end
-
