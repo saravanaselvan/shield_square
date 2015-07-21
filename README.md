@@ -7,16 +7,8 @@ TODO: Write a gem description
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'shield_square'
+gem 'shield_square', :git => "https://github.com/kvsrikanth/shield_square"
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install shield_square
 
 ## Usage
 

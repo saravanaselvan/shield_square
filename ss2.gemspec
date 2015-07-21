@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'shield_square/version'
+require 'ss2/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "shield_square"
-  spec.version       = ShieldSquare::VERSION
+  spec.name          = "ss2"
+  spec.version       = Ss2::VERSION
   spec.authors       = ["Saravanaselvan"]
   spec.email         = ["spsaravanaselvan@gmail.com"]
   spec.summary       = %q{Connect with shield square bot detection API}
