@@ -1,6 +1,6 @@
 require 'rails'
 
-module ShieldSquare
+module Ss2
   class InstallGenerator < Rails::Generators::Base
     source_root File.expand_path("../templates", __FILE__)
 
