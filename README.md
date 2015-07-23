@@ -13,8 +13,8 @@ Run the bundle command to install the gem.
 
 After you install the gem, run the generator:
 
-```rails 
-generate ss2:install
+``` 
+rails generate ss2:install
 ```
 
 The generator will install an initializer ss2_config.rb with default configuration to access shield square API.  Update the configuration file with your subscriber id, server etc.
