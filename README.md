@@ -1,6 +1,6 @@
 # ShieldSquare
 
-TODO: Write a gem description
+Rails connector to access shield square bot detection API
 
 ## Installation
 
@@ -9,15 +9,14 @@ Add this line to your application's Gemfile:
 ```ruby
 gem 'ss2', :git => "https://github.com/kvsrikanth/shield_square"
 ```
+Run the bundle command to install the gem.
 
-## Usage
+After you install the gem, run the generator:
 
-TODO: Write usage instructions here
+```rails 
+generate ss2:install
+```
 
-## Contributing
+The generator will install an initializer ss2_config.rb with default configuration to access shield square API.  Update the configuration file with your subscriber id, server etc.
 
-1. Fork it ( https://github.com/[my-github-username]/shield_square/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Update your view file with the code to access shield shquare API and JS snippet
