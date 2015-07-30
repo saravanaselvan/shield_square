@@ -10,7 +10,7 @@ module Rack
     		if request.params['jsonString'] != ""
 					Ss2.send_js_request request, request.params
 				end	
-    		@app.call(env)
+    		[200, {"Content-Type" => 'text/plain'},["Hello, world"]]
     	else
       	@app.call(env)
     	end
