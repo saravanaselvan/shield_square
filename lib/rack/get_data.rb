@@ -6,7 +6,7 @@ module Rack
 
     def call(env)
       @status, @headers, @response = @app.call(env)
-      [@status, @headers, @response.body]
+      [@status, @headers, @response]
     end		
 	end
 end
