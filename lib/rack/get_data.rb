@@ -5,8 +5,15 @@ module Rack
     end
 
     def call(env)
-      @status, @headers, @response = @app.call(env)
-      [@status, @headers, @response]
+    	if env['PATH_INFO'] == '/foo'
+    		request = Rack::Request.new(env)
+    		if request.params['jsonString'] != ""
+					Ss2.send_js_request request, request.params
+				end	
+    		@app.call(env)
+    	else
+      	@app.call(env)
+    	end
     end		
 	end
 end
