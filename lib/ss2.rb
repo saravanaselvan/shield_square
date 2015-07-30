@@ -1,5 +1,6 @@
 require "ss2/version"
 require 'ss2/engine'
+require 'rack/get_data'
 require 'cgi'
 require 'httparty'
 require 'addressable/uri'
