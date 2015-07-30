@@ -8,9 +8,9 @@ module Rack
     	if env['PATH_INFO'] == '/foo'
     		request = Rack::Request.new(env)
     		if request.params['jsonString'] != ""
-					Ss2.send_js_request request, request.params
+					error_code = Ss2.send_js_request request, request.params
 				end	
-    		[200, {"Content-Type" => 'text/plain'},["Hello, world"]]
+    		[200, {"Content-Type" => 'text/plain'},[:error_code => error_code]]
     	else
       	@app.call(env)
     	end
