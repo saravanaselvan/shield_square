@@ -10,7 +10,7 @@ module Rack
     		if request.params['jsonString'] != ""
 					error_code = Ss2.send_js_request request, request.params
 				end	
-    		[200, {"Content-Type" => 'text/plain'},[:error_code => error_code]]
+    		[200, {"Content-Type" => 'text/plain'},["error_code: #{error_code}"]]
     	else
       	@app.call(env)
     	end
