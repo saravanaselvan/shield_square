@@ -264,9 +264,10 @@ module Ss2
 		shieldsquare_request["host"] = request.ip
 		shieldsquare_post_data = JSON.generate(shieldsquare_request)
 		if @@async_http_post == true
-			shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
+			response = shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
 		else
-			shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
+			response = shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
 		end		
+		return response
 	end
 end
