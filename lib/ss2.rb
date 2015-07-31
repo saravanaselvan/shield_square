@@ -195,12 +195,20 @@ module Ss2
 
 	def self.shieldsquare_post_async(url, payload, timeout)
 		
-		cmd = 'curl -X POST  -H "Accept: Application/json" -H "Content-Type: application/json" -m '+ timeout + ' ' + url + " -d '"+ CGI::escape(payload) + "'"
-		output=`#{cmd}`
+		# cmd = 'curl -X POST  -H "Accept: Application/json" -H "Content-Type: application/json" -m '+ timeout + ' ' + url + " -d '"+ CGI::escape(payload) + "'"
+		# output=`#{cmd}`
 
-		result = $?.success?
-		response=Hash["response"=>result,"output"=>output]
-		return response
+		# result = $?.success?
+		# response=Hash["response"=>result,"output"=>output]
+		params=payload
+		headers={}
+		headers['Content-Type']='application/json'
+		headers['Accept']='application/json'
+		Thread.new do
+			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
+			response=Hash["response"=>result,"output"=>output]
+			return response
+		end
 	end	
 
 	def self.shieldsquare_post_sync(url, payload, timeout)
