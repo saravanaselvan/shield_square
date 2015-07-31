@@ -206,7 +206,7 @@ module Ss2
 		headers['Accept']='application/json'
 		Thread.new do
 			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
-			response=Hash["response"=>result,"output"=>output]
+			# response=Hash["response"=>result,"output"=>output]
 			return response
 		end
 	end	
