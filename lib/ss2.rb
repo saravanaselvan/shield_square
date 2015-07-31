@@ -4,6 +4,7 @@ require 'rack/get_data'
 require 'cgi'
 require 'httparty'
 require 'addressable/uri'
+require 'typhoeus'
 
 module Ss2
 	class URI::Parser
@@ -171,7 +172,6 @@ module Ss2
 			
 			if @@async_http_post == true
 				asyncresponse=shieldsquare_post_async shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value.to_s
-				Rails.logger.debug asyncresponse
 				if asyncresponse['response'] == false
 					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
 					$ShieldsquareResponse_reason = "Request Timed Out/Server Not Reachable"
@@ -201,14 +201,28 @@ module Ss2
 
 		# result = $?.success?
 		# response=Hash["response"=>result,"output"=>output]
-		params=payload
+		# return response
+
 		headers={}
 		headers['Content-Type']='application/json'
 		headers['Accept']='application/json'
-		response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
-		# response=Hash["response"=>result,"output"=>output]
-		Rails.logger.debug response
-		return response
+		request = Typhoeus::Request.new(
+										  url,
+										  method: :post,
+										  params: payload,
+										  headers: headers
+										)
+		request.on_complete do |response|
+		  if response.success?
+		    return response
+		  elsif response.timed_out?
+		  elsif response.code == 0
+
+		  else
+		  end
+		end
+
+		request.run
 	end	
 
 	def self.shieldsquare_post_sync(url, payload, timeout)
@@ -264,14 +278,9 @@ module Ss2
 		shieldsquare_request["host"] = request.ip
 		shieldsquare_post_data = JSON.generate(shieldsquare_request)
 		if @@async_http_post == true
-			Thread.new do
-				response = shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
-				Rails.logger.debug response
-				return response
-			end
+			shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
 		else
-			response = shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
-			return response
+			shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
 		end		
 	end
 end
