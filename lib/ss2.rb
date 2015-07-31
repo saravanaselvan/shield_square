@@ -205,12 +205,10 @@ module Ss2
 		headers={}
 		headers['Content-Type']='application/json'
 		headers['Accept']='application/json'
-		Thread.new do
-			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
-			# response=Hash["response"=>result,"output"=>output]
-			Rails.logger.debug response
-			return response
-		end
+		response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
+		# response=Hash["response"=>result,"output"=>output]
+		Rails.logger.debug response
+		return response
 	end	
 
 	def self.shieldsquare_post_sync(url, payload, timeout)
@@ -266,11 +264,14 @@ module Ss2
 		shieldsquare_request["host"] = request.ip
 		shieldsquare_post_data = JSON.generate(shieldsquare_request)
 		if @@async_http_post == true
-			response = shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
-			Rails.logger.debug response
+			Thread.new do
+				response = shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
+				Rails.logger.debug response
+				return response
+			end
 		else
 			response = shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
+			return response
 		end		
-		return response
 	end
 end
