@@ -171,6 +171,7 @@ module Ss2
 			
 			if @@async_http_post == true
 				asyncresponse=shieldsquare_post_async shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value.to_s
+				Rails.logger.debug asyncresponse
 				if asyncresponse['response'] == false
 					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
 					$ShieldsquareResponse_reason = "Request Timed Out/Server Not Reachable"
