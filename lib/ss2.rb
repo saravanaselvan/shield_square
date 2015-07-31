@@ -208,6 +208,7 @@ module Ss2
 		Thread.new do
 			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
 			# response=Hash["response"=>result,"output"=>output]
+			Rails.logger.debug response
 			return response
 		end
 	end	
