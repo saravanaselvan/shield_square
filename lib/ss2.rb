@@ -265,6 +265,7 @@ module Ss2
 		shieldsquare_post_data = JSON.generate(shieldsquare_request)
 		if @@async_http_post == true
 			response = shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value.to_s
+			Rails.logger.debug response
 		else
 			response = shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
 		end		
