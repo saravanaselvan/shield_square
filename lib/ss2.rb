@@ -214,6 +214,7 @@ module Ss2
 										)
 		request.on_complete do |response|
 		  if response.success?
+		  	response=Hash["response"=>response.success?, "output"=>output]
 		    return response
 		  elsif response.timed_out?
 		  elsif response.code == 0
