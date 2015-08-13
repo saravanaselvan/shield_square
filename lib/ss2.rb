@@ -4,7 +4,6 @@ require 'rack/get_data'
 require 'cgi'
 require 'httparty'
 require 'addressable/uri'
-require 'typhoeus'
 
 module Ss2
 	class URI::Parser
@@ -195,35 +194,12 @@ module Ss2
 	end
 
 	def self.shieldsquare_post_async(url, payload, timeout)
-		
-		# cmd = 'curl -X POST  -H "Accept: Application/json" -H "Content-Type: application/json" -m '+ timeout + ' ' + url + " -d '"+ CGI::escape(payload) + "'"
-		# output=`#{cmd}`
+		cmd = 'curl -X POST  -H "Accept: Application/json" -H "Content-Type: application/json" -m '+ timeout + ' ' + url + " -d '"+ CGI::escape(payload) + "'"
+		output=`#{cmd}`
 
-		# result = $?.success?
-		# response=Hash["response"=>result,"output"=>output]
-		# return response
-
-		headers={}
-		headers['Content-Type']='application/json'
-		headers['Accept']='application/json'
-		request = Typhoeus::Request.new(
-										  url,
-										  method: :post,
-										  params: payload,
-										  headers: headers
-										)
-		request.on_complete do |response|
-		  if response.success?
-		  	response=Hash["response"=>response.success?, "output"=>output]
-		    return response
-		  elsif response.timed_out?
-		  elsif response.code == 0
-
-		  else
-		  end
-		end
-
-		request.run
+		result = $?.success?
+		response=Hash["response"=>result,"output"=>output]
+		return response
 	end	
 
 	def self.shieldsquare_post_sync(url, payload, timeout)
