@@ -168,23 +168,12 @@ module Ss2
 			end
 
 		else
-			
-			if @@async_http_post == true
-				asyncresponse=shieldsquare_post_async shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value.to_s
-				if asyncresponse['response'] == false
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
-					$ShieldsquareResponse_reason = "Request Timed Out/Server Not Reachable"
-				else
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW
-				end
+			syncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value
+			if syncresponse['response'] != 200
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
+				$ShieldsquareResponse_reason = syncresponse['output']
 			else
-				syncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value
-				if syncresponse['response'] != 200
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
-					$ShieldsquareResponse_reason = syncresponse['output']
-				else
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW
-				end
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW
 			end
 			$ShieldsquareResponse_dynamic_JS = "var __uzdbm_c = 2+2"
 		end
@@ -194,12 +183,9 @@ module Ss2
 	end
 
 	def self.shieldsquare_post_async(url, payload, timeout)
-		cmd = 'curl -X POST  -H "Accept: Application/json" -H "Content-Type: application/json" -m '+ timeout + ' ' + url + " -d '"+ CGI::escape(payload) + "'"
-		output=`#{cmd}`
-
-		result = $?.success?
-		response=Hash["response"=>result,"output"=>output]
-		return response
+		Thread.new do | url, payload |
+		 shieldsquare_post_sync url, payload, timeout
+		end		
 	end	
 
 	def self.shieldsquare_post_sync(url, payload, timeout)
