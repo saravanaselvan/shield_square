@@ -197,8 +197,8 @@ module Ss2
 		headers['Content-Type']='application/json'
 		headers['Accept']='application/json'
 		begin
-			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
 			Rails.logger.debug url
+			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
 		rescue Exception => e
 			Rails.logger.debug e
 			response=Hash["response"=>0,"output"=>"Request Timed Out/Server Not Reachable"]
