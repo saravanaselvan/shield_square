@@ -183,7 +183,7 @@ module Ss2
 	end
 
 	def self.shieldsquare_post_async(url, payload, timeout)
-		Thread.new do | url, payload |
+		Thread.new do
 			response = shieldsquare_post_sync url, payload, timeout
 			Rails.logger.debug response
 		end		
