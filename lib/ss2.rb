@@ -182,6 +182,14 @@ module Ss2
 		return shieldsquareResponse
 	end
 
+	def self.shieldsquare_post_async(url, payload, timeout)
+		Thread.new do | url, payload |
+			response = shieldsquare_post_sync url, payload, timeout
+			Rails.logger.debug response
+		end		
+		return
+	end	
+
 	def self.shieldsquare_post_sync(url, payload, timeout)
 		# Sendind the Data to the ShieldSquare Server
 		params=payload
@@ -235,11 +243,7 @@ module Ss2
 		shieldsquare_request["host"] = request.ip
 		shieldsquare_post_data = JSON.generate(shieldsquare_request)
 		if @@async_http_post == true
-			Thread.new do | url, payload |
-				response = shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
-				Rails.logger.debug response
-			end
-			return
+			shieldsquare_post_async url, shieldsquare_post_data, @@timeout_value
 		else
 			shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
 		end		
