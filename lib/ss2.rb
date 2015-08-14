@@ -186,6 +186,7 @@ module Ss2
 		Thread.new do | url, payload |
 		 shieldsquare_post_sync url, payload, timeout
 		end		
+		return
 	end	
 
 	def self.shieldsquare_post_sync(url, payload, timeout)
@@ -242,7 +243,8 @@ module Ss2
 		shieldsquare_post_data = JSON.generate(shieldsquare_request)
 		if @@async_http_post == true
 			Thread.new do | url, payload |
-				shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
+				response = shieldsquare_post_sync url, shieldsquare_post_data, @@timeout_value
+				Rails.logger.debug response
 			end
 			return
 		else
