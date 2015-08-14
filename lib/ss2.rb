@@ -138,7 +138,7 @@ module Ss2
 		$ShieldsquareRequest_zpsbda = Time.now.to_i
 		my_hash = {:_zpsbd0 => $ShieldsquareRequest_zpsbd0,:_zpsbd1 => $ShieldsquareRequest_zpsbd1,:_zpsbd2 => $ShieldsquareRequest_zpsbd2,:_zpsbd3 => $ShieldsquareRequest_zpsbd3,:_zpsbd4 => $ShieldsquareRequest_zpsbd4,:_zpsbd5 => $ShieldsquareRequest_zpsbd5,:_zpsbd6 => $ShieldsquareRequest_zpsbd6,:_zpsbd7 => $ShieldsquareRequest_zpsbd7,:_zpsbd8 => $ShieldsquareRequest_zpsbd8,:_zpsbd9 => $ShieldsquareRequest_zpsbd9,:_zpsbda => $ShieldsquareRequest_zpsbda,:__uzma => $ShieldsquareRequest__uzma,:__uzmb => $ShieldsquareRequest__uzmb,:__uzmc => $ShieldsquareRequest__uzmc,:__uzmd => $ShieldsquareRequest__uzmd }
 
-		shieldsquare_json_obj = JSON.generate(my_hash)
+		shieldsquare_json_obj = my_hash
 		$ShieldsquareResponse_pid = shieldsquare_pid
 		$ShieldsquareResponse_url = @@js_url
 
