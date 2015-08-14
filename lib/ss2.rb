@@ -199,6 +199,7 @@ module Ss2
 		begin
 			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
 		rescue Exception => e
+			Rails.logger.debug e
 			response=Hash["response"=>0,"output"=>"Request Timed Out/Server Not Reachable"]
 		end
 		return response
