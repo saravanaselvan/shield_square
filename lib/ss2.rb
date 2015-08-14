@@ -182,13 +182,6 @@ module Ss2
 		return shieldsquareResponse
 	end
 
-	def self.shieldsquare_post_async(url, payload, timeout)
-		Thread.new do | url, payload |
-		 shieldsquare_post_sync url, payload, timeout
-		end		
-		return
-	end	
-
 	def self.shieldsquare_post_sync(url, payload, timeout)
 		# Sendind the Data to the ShieldSquare Server
 		params=payload
