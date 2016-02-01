@@ -82,8 +82,6 @@ module Ss2
 			exit
 		end	
 		
-		shieldsquare_pid = shieldsquare_generate_pid @@sid
-		
 		
 		if @@_ipaddr == "REMOTE_ADDR"
 			ip_address_temp = request.remote_ip
@@ -103,6 +101,8 @@ module Ss2
 		if $IP_ADDRESS.blank?
 			$IP_ADDRESS = "0.0.0.0"
 		end 
+				
+		shieldsquare_pid = shieldsquare_generate_pid @@sid
 
 		if cookies['__uzma']!="" and (cookies['__uzma'].to_s).length > 3
 			shieldsquare_lastaccesstime =  cookies['__uzmd']
