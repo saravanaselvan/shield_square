@@ -159,11 +159,8 @@ module Ss2
 
 		else
 			syncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value
-			if syncresponse['response'] != 200
-				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_MONITOR
 				$ShieldsquareResponse_reason = syncresponse['output']
-			else
-				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW
 			end
 			$ShieldsquareResponse_dynamic_JS = "var __uzdbm_c = 2+2"
 		end
