@@ -19,26 +19,29 @@ module Ss2
 	mattr_accessor :async_http_post
 	mattr_accessor :timeout_value
 	mattr_accessor :js_url
+	mattr_accessor :_ipaddr
 
   def self.setup
     yield self
   end
 	#Request Variables
-	$ShieldsquareRequest_zpsbd0 = false
-	$ShieldsquareRequest_zpsbd1 = ""
-	$ShieldsquareRequest_zpsbd2 = ""
-	$ShieldsquareRequest_zpsbd3 = ""
-	$ShieldsquareRequest_zpsbd4 = ""
-	$ShieldsquareRequest_zpsbd5 = ""
-	$ShieldsquareRequest_zpsbd6 = ""
-	$ShieldsquareRequest_zpsbd7 = ""
-	$ShieldsquareRequest_zpsbd8 = ""
-	$ShieldsquareRequest_zpsbd9 = ""
-	$ShieldsquareRequest_zpsbda = ""
-	$ShieldsquareRequest__uzma = ""
-	$ShieldsquareRequest__uzmb = 0
-	$ShieldsquareRequest__uzmc = ""
-	$ShieldsquareRequest__uzmd = 0
+	shieldsquare_request = {
+		_zpsbd0: false,
+		_zpsbd1:"",
+		_zpsbd2: "",
+		_zpsbd3: "",
+		_zpsbd4: "",
+		_zpsbd5: "",
+		_zpsbd6: "",
+		_zpsbd7: "",
+		_zpsbd8: "",
+		_zpsbd9: "",
+		_zpsbda: "",
+		__uzma: "",
+		__uzmb: 0,
+		__uzmc: "",
+		__uzmd: 0
+	}
 
 	#Curl Response Variables
 	$ShieldsquareCurlResponseCode_error_string = ""
@@ -81,6 +84,17 @@ module Ss2
 		
 		shieldsquare_pid = shieldsquare_generate_pid @@sid
 		
+		
+		if @@_ipaddr == "REMOTE_ADDR"
+			$IP_ADDRESS = request.remote_ip
+		else
+			$IP_ADDRESS = request.headers[@@_ipaddr]
+		end
+
+		if $IP_ADDRESS.blank?
+			$IP_ADDRESS = "0.0.0.0"
+		end 
+
 		if cookies['__uzma']!="" and (cookies['__uzma'].to_s).length > 3
 			shieldsquare_lastaccesstime =  cookies['__uzmd']
 			shieldsquare_uzmc=0
@@ -112,23 +126,38 @@ module Ss2
 			$ShieldsquareRequest__uzmd = shieldsquare_lastaccesstime
 		end
 		if @@mode == 'Active'
-			$ShieldsquareRequest_zpsbd0 = true;
+			shieldsquare_request._zpsbd0 = true;
 		else
-			$ShieldsquareRequest_zpsbd0 = false;
+			shieldsquare_request._zpsbd0 = false;
 		end
-		$ShieldsquareRequest_zpsbd1 = @@sid
-		$ShieldsquareRequest_zpsbd2 = shieldsquare_pid
-		$ShieldsquareRequest_zpsbd3 = request.headers['HTTP_REFERER']
-		$ShieldsquareRequest_zpsbd4 = request.headers['REQUEST_URI']
-		$ShieldsquareRequest_zpsbd5 = request.session_options[:id]
-		$ShieldsquareRequest_zpsbd6 = $IP_ADDRESS
-		$ShieldsquareRequest_zpsbd7 = request.headers['HTTP_USER_AGENT']
-		$ShieldsquareRequest_zpsbd8 = shieldsquare_calltype
-		$ShieldsquareRequest_zpsbd9 = shieldsquare_username
-		$ShieldsquareRequest_zpsbda = Time.now.to_i
-		my_hash = {:_zpsbd0 => $ShieldsquareRequest_zpsbd0,:_zpsbd1 => $ShieldsquareRequest_zpsbd1,:_zpsbd2 => $ShieldsquareRequest_zpsbd2,:_zpsbd3 => $ShieldsquareRequest_zpsbd3,:_zpsbd4 => $ShieldsquareRequest_zpsbd4,:_zpsbd5 => $ShieldsquareRequest_zpsbd5,:_zpsbd6 => $ShieldsquareRequest_zpsbd6,:_zpsbd7 => $ShieldsquareRequest_zpsbd7,:_zpsbd8 => $ShieldsquareRequest_zpsbd8,:_zpsbd9 => $ShieldsquareRequest_zpsbd9,:_zpsbda => $ShieldsquareRequest_zpsbda,:__uzma => $ShieldsquareRequest__uzma,:__uzmb => $ShieldsquareRequest__uzmb,:__uzmc => $ShieldsquareRequest__uzmc,:__uzmd => $ShieldsquareRequest__uzmd }
 
-		shieldsquare_json_obj = my_hash
+		shieldsquare_request._zpsbd1 = @@sid
+		shieldsquare_request._zpsbd2 = shieldsquare_pid
+		shieldsquare_request._zpsbd3 = request.headers['HTTP_REFERER']
+		shieldsquare_request._zpsbd4 = request.headers['REQUEST_URI']
+		shieldsquare_request._zpsbd5 = request.session_options[:id]
+		shieldsquare_request._zpsbd6 = $IP_ADDRESS
+		shieldsquare_request._zpsbd7 = request.headers['HTTP_USER_AGENT']
+		shieldsquare_request._zpsbd8 = shieldsquare_calltype
+		shieldsquare_request._zpsbd9 = shieldsquare_username
+		shieldsquare_request._zpsbda = Time.now.to_i
+		shieldsquare_json_obj = {
+			:_zpsbd0 => shieldsquare_request._zpsbd0,
+			:_zpsbd1 => shieldsquare_request._zpsbd1,
+			:_zpsbd2 => shieldsquare_request._zpsbd2,
+			:_zpsbd3 => shieldsquare_request._zpsbd3,
+			:_zpsbd4 => shieldsquare_request._zpsbd4,
+			:_zpsbd5 => shieldsquare_request._zpsbd5,
+			:_zpsbd6 => shieldsquare_request._zpsbd6,
+			:_zpsbd7 => shieldsquare_request._zpsbd7,
+			:_zpsbd8 => shieldsquare_request._zpsbd8,
+			:_zpsbd9 => shieldsquare_request._zpsbd9,
+			:_zpsbda => shieldsquare_request._zpsbda,
+			:__uzma => $ShieldsquareRequest__uzma,
+			:__uzmb => $ShieldsquareRequest__uzmb,
+			:__uzmc => $ShieldsquareRequest__uzmc,
+			:__uzmd => $ShieldsquareRequest__uzmd 
+		}
 		$ShieldsquareResponse_pid = shieldsquare_pid
 		$ShieldsquareResponse_url = @@js_url
 
