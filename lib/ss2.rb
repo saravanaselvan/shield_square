@@ -94,8 +94,10 @@ module Ss2
 		ip_address_temp = ip_address_temp.split(":")
 		unless ip_address_temp[3].blank?
 			$IP_ADDRESS = ip_address_temp[3]
-		elsif ip_address_temp != nil
-			$IP_ADDRESS = ip_address_temp[0]
+		else
+			unless ip_address_temp.blank?
+				$IP_ADDRESS = ip_address_temp[0]
+			end
 		end
 
 		if $IP_ADDRESS.blank?
