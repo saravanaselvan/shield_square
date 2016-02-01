@@ -101,7 +101,7 @@ module Ss2
 		if $IP_ADDRESS.blank?
 			$IP_ADDRESS = "0.0.0.0"
 		end 
-				
+
 		shieldsquare_pid = shieldsquare_generate_pid @@sid
 
 		if cookies['__uzma']!="" and (cookies['__uzma'].to_s).length > 3
@@ -113,10 +113,10 @@ module Ss2
 			shieldsquare_uzmc= rand(shieldsquare_low..shieldsquare_high).to_s + (shieldsquare_c+shieldsquare_a*shieldsquare_b).to_s + rand(shieldsquare_low..shieldsquare_high).to_s
 			cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
 			cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
-			$ShieldsquareRequest__uzma = cookies["__uzma"]
-			$ShieldsquareRequest__uzmb = cookies["__uzmb"]
-			$ShieldsquareRequest__uzmc = shieldsquare_uzmc
-			$ShieldsquareRequest__uzmd = shieldsquare_lastaccesstime
+			$shieldsquare_request[:__uzma] = cookies["__uzma"]
+			$shieldsquare_request[:__uzmb] = cookies["__uzmb"]
+			$shieldsquare_request[:__uzmc] = shieldsquare_uzmc
+			$shieldsquare_request[:__uzmd] = shieldsquare_lastaccesstime
 		
 		else
 
@@ -129,10 +129,10 @@ module Ss2
 			cookies[:__uzmb] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
 			cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
 			cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
-			$ShieldsquareRequest__uzma = shieldsquare_uzma
-			$ShieldsquareRequest__uzmb = Time.now.to_i
-			$ShieldsquareRequest__uzmc = shieldsquare_uzmc
-			$ShieldsquareRequest__uzmd = shieldsquare_lastaccesstime
+			$shieldsquare_request[:__uzma] = shieldsquare_uzma
+			$shieldsquare_request[:__uzmb] = Time.now.to_i
+			$shieldsquare_request[:__uzmc] = shieldsquare_uzmc
+			$shieldsquare_request[:__uzmd] = shieldsquare_lastaccesstime
 		end
 		if @@mode == 'Active'
 			$shieldsquare_request[:_zpsbd0] = true;
@@ -150,67 +150,50 @@ module Ss2
 		$shieldsquare_request[:_zpsbd8] = shieldsquare_calltype
 		$shieldsquare_request[:_zpsbd9] = shieldsquare_username
 		$shieldsquare_request[:_zpsbda] = Time.now.to_i
-		shieldsquare_json_obj = {
-			:_zpsbd0 => $shieldsquare_request[:_zpsbd0],
-			:_zpsbd1 => $shieldsquare_request[:_zpsbd1],
-			:_zpsbd2 => $shieldsquare_request[:_zpsbd2],
-			:_zpsbd3 => $shieldsquare_request[:_zpsbd3],
-			:_zpsbd4 => $shieldsquare_request[:_zpsbd4],
-			:_zpsbd5 => $shieldsquare_request[:_zpsbd5],
-			:_zpsbd6 => $shieldsquare_request[:_zpsbd6],
-			:_zpsbd7 => $shieldsquare_request[:_zpsbd7],
-			:_zpsbd8 => $shieldsquare_request[:_zpsbd8],
-			:_zpsbd9 => $shieldsquare_request[:_zpsbd9],
-			:_zpsbda => $shieldsquare_request[:_zpsbda],
-			:__uzma => $ShieldsquareRequest__uzma,
-			:__uzmb => $ShieldsquareRequest__uzmb,
-			:__uzmc => $ShieldsquareRequest__uzmc,
-			:__uzmd => $ShieldsquareRequest__uzmd 
-		}
+
 		$ShieldsquareResponse_pid = shieldsquare_pid
 		$ShieldsquareResponse_url = @@js_url
 
 		if @@mode == 'Active'
-			shieldsquareCurlResponseCode=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value
-			if shieldsquareCurlResponseCode['response'] != 200
-				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
-				$ShieldsquareResponse_reason = shieldsquareCurlResponseCode['output']
+			shieldsquareResponse_from_ss=shieldsquare_post_sync shieldsquare_service_url, $shieldsquare_request.to_json,@@timeout_value
+			shieldsquareResponse_from_ss = JSON.parse(shieldsquareResponse_from_ss)
+			$ShieldsquareResponse_dynamic_JS = shieldsquareResponse_from_ss['dynamic_JS']
+			n=shieldsquareResponse_from_ss['ssresp'].to_i
+			if n==0
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW
+			elsif n==1
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_MONITOR
+			elsif n==2
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_CAPTCHA
+			elsif n==3
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_BLOCK
+			elsif n==4
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_FFD
 			else
-				shieldsquareResponse_from_ss = JSON.parse(shieldsquareCurlResponseCode['output'])
-				$ShieldsquareResponse_dynamic_JS = shieldsquareResponse_from_ss['dynamic_JS']
-				n=shieldsquareResponse_from_ss['ssresp'].to_i
-				if n==0
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW
-				elsif n==1
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_MONITOR
-				elsif n==2
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_CAPTCHA
-				elsif n==3
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_BLOCK
-				elsif n==4
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_FFD
-				else
-					$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
-					$ShieldsquareResponse_reason = shieldsquareCurlResponseCode['output']
-				end 
-			end
+				$ShieldsquareResponse_responsecode = $ShieldsquareCodes_ALLOW_EXP
+				$ShieldsquareResponse_reason = shieldsquareResponse_from_ss['output']
+			end 
 
 		else
-			syncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value
-			Rails.logger.debug "Sample logging -- #{syncresponse}"
+			syncresponse=shieldsquare_post_sync shieldsquare_service_url, $shieldsquare_request.to_json,@@timeout_value
 			$ShieldsquareResponse_responsecode = $ShieldsquareCodes_MONITOR
 			$ShieldsquareResponse_reason = syncresponse['output']
 			$ShieldsquareResponse_dynamic_JS = "var __uzdbm_c = 2+2"
 		end
 
-		shieldsquareResponse = Hash["pid" => $ShieldsquareResponse_pid, "responsecode" => $ShieldsquareResponse_responsecode,"url" => $ShieldsquareResponse_url,"reason" => $ShieldsquareResponse_reason,"dynamic_JS" =>$ShieldsquareResponse_dynamic_JS]
-		return shieldsquareResponse
+		shieldsquare_response = {
+			"pid" => $ShieldsquareResponse_pid, 
+			"responsecode" => $ShieldsquareResponse_responsecode,
+			"url" => $ShieldsquareResponse_url,
+			"reason" => $ShieldsquareResponse_reason, 
+			"dynamic_JS" =>$ShieldsquareResponse_dynamic_JS
+		}
+		return shieldsquare_response
 	end
 
 	def self.shieldsquare_post_async(url, payload, timeout)
 		Thread.new do
 			response = shieldsquare_post_sync url, payload, timeout
-			Rails.logger.debug response
 		end		
 		return
 	end	
@@ -222,10 +205,8 @@ module Ss2
 		headers['Content-Type']='application/json'
 		headers['Accept']='application/json'
 		begin
-			response = HTTParty.post(url, :query => params,:headers => headers, :timeout => timeout)
-			Rails.logger.debug response
+			response = HTTParty.post(url, :body => params,:headers => headers, :timeout => timeout)
 		rescue Exception => e
-			Rails.logger.debug e
 			response=Hash["response"=>0,"output"=>"Request Timed Out/Server Not Reachable"]
 		end
 		return response
