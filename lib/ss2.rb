@@ -86,9 +86,16 @@ module Ss2
 		
 		
 		if @@_ipaddr == "REMOTE_ADDR"
-			$IP_ADDRESS = request.remote_ip
+			ip_address_temp = request.remote_ip
 		else
-			$IP_ADDRESS = request.headers[@@_ipaddr]
+			ip_address_temp = request.headers[@@_ipaddr]
+		end
+
+		ip_address_temp = ip_address_temp.split(":")
+		unless ip_address_temp[3].blank?
+			$IP_ADDRESS = ip_address_temp[3]
+		elsif ip_address_temp != nil
+			$IP_ADDRESS = ip_address_temp[0]
 		end
 
 		if $IP_ADDRESS.blank?
