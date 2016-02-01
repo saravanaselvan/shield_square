@@ -25,7 +25,7 @@ module Ss2
     yield self
   end
 	#Request Variables
-	shieldsquare_request = {
+	$shieldsquare_request = {
 		_zpsbd0: false,
 		_zpsbd1:"",
 		_zpsbd2: "",
@@ -126,33 +126,33 @@ module Ss2
 			$ShieldsquareRequest__uzmd = shieldsquare_lastaccesstime
 		end
 		if @@mode == 'Active'
-			shieldsquare_request._zpsbd0 = true;
+			$shieldsquare_request._zpsbd0 = true;
 		else
-			shieldsquare_request._zpsbd0 = false;
+			$shieldsquare_request._zpsbd0 = false;
 		end
 
-		shieldsquare_request._zpsbd1 = @@sid
-		shieldsquare_request._zpsbd2 = shieldsquare_pid
-		shieldsquare_request._zpsbd3 = request.headers['HTTP_REFERER']
-		shieldsquare_request._zpsbd4 = request.headers['REQUEST_URI']
-		shieldsquare_request._zpsbd5 = request.session_options[:id]
-		shieldsquare_request._zpsbd6 = $IP_ADDRESS
-		shieldsquare_request._zpsbd7 = request.headers['HTTP_USER_AGENT']
-		shieldsquare_request._zpsbd8 = shieldsquare_calltype
-		shieldsquare_request._zpsbd9 = shieldsquare_username
-		shieldsquare_request._zpsbda = Time.now.to_i
+		$shieldsquare_request._zpsbd1 = @@sid
+		$shieldsquare_request._zpsbd2 = shieldsquare_pid
+		$shieldsquare_request._zpsbd3 = request.headers['HTTP_REFERER']
+		$shieldsquare_request._zpsbd4 = request.headers['REQUEST_URI']
+		$shieldsquare_request._zpsbd5 = request.session_options[:id]
+		$shieldsquare_request._zpsbd6 = $IP_ADDRESS
+		$shieldsquare_request._zpsbd7 = request.headers['HTTP_USER_AGENT']
+		$shieldsquare_request._zpsbd8 = shieldsquare_calltype
+		$shieldsquare_request._zpsbd9 = shieldsquare_username
+		$shieldsquare_request._zpsbda = Time.now.to_i
 		shieldsquare_json_obj = {
-			:_zpsbd0 => shieldsquare_request._zpsbd0,
-			:_zpsbd1 => shieldsquare_request._zpsbd1,
-			:_zpsbd2 => shieldsquare_request._zpsbd2,
-			:_zpsbd3 => shieldsquare_request._zpsbd3,
-			:_zpsbd4 => shieldsquare_request._zpsbd4,
-			:_zpsbd5 => shieldsquare_request._zpsbd5,
-			:_zpsbd6 => shieldsquare_request._zpsbd6,
-			:_zpsbd7 => shieldsquare_request._zpsbd7,
-			:_zpsbd8 => shieldsquare_request._zpsbd8,
-			:_zpsbd9 => shieldsquare_request._zpsbd9,
-			:_zpsbda => shieldsquare_request._zpsbda,
+			:_zpsbd0 => $shieldsquare_request._zpsbd0,
+			:_zpsbd1 => $shieldsquare_request._zpsbd1,
+			:_zpsbd2 => $shieldsquare_request._zpsbd2,
+			:_zpsbd3 => $shieldsquare_request._zpsbd3,
+			:_zpsbd4 => $shieldsquare_request._zpsbd4,
+			:_zpsbd5 => $shieldsquare_request._zpsbd5,
+			:_zpsbd6 => $shieldsquare_request._zpsbd6,
+			:_zpsbd7 => $shieldsquare_request._zpsbd7,
+			:_zpsbd8 => $shieldsquare_request._zpsbd8,
+			:_zpsbd9 => $shieldsquare_request._zpsbd9,
+			:_zpsbda => $shieldsquare_request._zpsbda,
 			:__uzma => $ShieldsquareRequest__uzma,
 			:__uzmb => $ShieldsquareRequest__uzmb,
 			:__uzmc => $ShieldsquareRequest__uzmc,
