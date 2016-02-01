@@ -159,6 +159,7 @@ module Ss2
 
 		else
 			syncresponse=shieldsquare_post_sync shieldsquare_service_url, shieldsquare_json_obj,@@timeout_value
+			Rails.logger.debug "Sample logging -- #{syncresponse}"
 			$ShieldsquareResponse_responsecode = $ShieldsquareCodes_MONITOR
 			$ShieldsquareResponse_reason = syncresponse['output']
 			$ShieldsquareResponse_dynamic_JS = "var __uzdbm_c = 2+2"
