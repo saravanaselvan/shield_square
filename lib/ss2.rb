@@ -79,17 +79,7 @@ module Ss2
 			exit
 		end	
 		
-		if shieldsquare_calltype == 1 
-			shieldsquare_pid = shieldsquare_generate_pid @@sid
-		else
-		
-			if  shieldsquare_pid.length == 0
-				puts "Content-type: text/html"
-				puts ''
-				puts 'PID Cant be null'
-				exit		
-			end
-		end
+		shieldsquare_pid = shieldsquare_generate_pid @@sid
 		
 		if cookies['__uzma']!="" and (cookies['__uzma'].to_s).length > 3
 			shieldsquare_lastaccesstime =  cookies['__uzmd']
