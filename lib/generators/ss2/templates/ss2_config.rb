@@ -5,24 +5,26 @@ Ss2.setup do |config|
 	#North America - ss_scus.shieldsquare.net
 	#Europe - ss_ew.shieldsquare.net
 	#Australia - ss_au.shieldsquare.net
-	config.ss2_domain = '130.211.186.67'
+	config.ss2_domain = '<%= @server_name %>'
 
 	#Enter your SID
-	config.sid = "77a4362b-d035-4d7b-afb3-6050be9e0738"
+	config.sid = "<%= @sid %>"
 
 	#Please specify the mode in which you want to operate
 	#mode = 'Active'
 	#mode = 'Monitor'
-	config.mode = 'Monitor'
+	config.mode = '<%= @mode %>'
 
 	#Asynchronous HTTP Data Post  
 	#Setting this value to true will reduce the page load time when you are in Monitor mode. 
 	#Note: Enable this only if you are hosting your applications on Linux environments. 
-	config.async_http_post = true
+	config.async_http_post = false
 
 	#* Timeout in Seconds or Milliseconds
 	config.timeout_value = 500
 
 	#* Enter the URL fo the JavaScript Data Collector
 	config.js_url = '/getData'
+
+	config._ipaddr = "REMOTE_ADDR"
 end
