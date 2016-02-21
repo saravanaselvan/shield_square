@@ -53,6 +53,7 @@ module Ss2
 	mattr_accessor :timeout_value
 	mattr_accessor :js_url
 	mattr_accessor :_ipaddr
+	mattr_accessor :_deployment_number
 
   def self.setup
     yield self
@@ -87,19 +88,10 @@ module Ss2
 			exit
 		end	
 		
-		if @@_ipaddr == "REMOTE_ADDR"
-			ip_address_temp = request.remote_ip
+		if @@_ipaddr == "REMOTE_ADDR" || @@_ipaddr == "auto"
+			$IP_ADDRESS = request.headers["REMOTE_ADDR"]
 		else
-			ip_address_temp = request.headers[@@_ipaddr]
-		end
-
-		ip_address_temp = ip_address_temp.split(":")
-		unless ip_address_temp[3].blank?
-			$IP_ADDRESS = ip_address_temp[3]
-		else
-			unless ip_address_temp.blank?
-				$IP_ADDRESS = ip_address_temp[0]
-			end
+			$IP_ADDRESS = request.headers[@@_ipaddr]
 		end
 
 		if $IP_ADDRESS.blank?
@@ -141,12 +133,16 @@ module Ss2
 			shieldsquare_request.__uzmd = shieldsquare_lastaccesstime
 		end
 
-		if @@mode == 'Active'
+		if @@mode == 'Active' && (shieldsquare_calltype != 4 && shieldsquare_calltype != 5)
 			shieldsquare_request._zpsbd0 = true;
-			shieldsquare_response = handle_active_mode(shieldsquare_response, shieldsquare_service_url, shieldsquare_request.to_json,@@timeout_value)
+			shieldsquare_request_hash = JSON.parse(shieldsquare_request.to_json)
+			shieldsquare_request_json = get_request_json(request, shieldsquare_request_hash)
+			shieldsquare_response = handle_active_mode(shieldsquare_response, shieldsquare_service_url, shieldsquare_request_json, @@timeout_value)
 		else
 			shieldsquare_request._zpsbd0 = false;
-			shieldsquare_response = handle_monitor_mode(shieldsquare_response, shieldsquare_service_url, shieldsquare_request.to_json,@@timeout_value)
+			shieldsquare_request_hash = JSON.parse(shieldsquare_request.to_json)
+			shieldsquare_request_json = get_request_json(request, shieldsquare_request_hash)
+			shieldsquare_response = handle_monitor_mode(shieldsquare_response, shieldsquare_service_url, shieldsquare_request_json, @@timeout_value, shieldsquare_calltype)
 		end
 
 		shieldsquare_response
@@ -176,8 +172,8 @@ module Ss2
 		shieldsquare_response
 	end
 
-	def self.handle_monitor_mode(shieldsquare_response, url, payload, timeout)
-		if @@async_http_post == true
+	def self.handle_monitor_mode(shieldsquare_response, url, payload, timeout, shieldsquare_calltype)
+		if @@async_http_post == true || shieldsquare_calltype == 4 && shieldsquare_calltype == 5
 			shieldsquare_response_from_ss = shieldsquare_post_async url, payload, timeout
 			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW
 			shieldsquare_response.dynamic_JS = "var __uzdbm_c = 2+2"
@@ -218,6 +214,60 @@ module Ss2
 		response
 	end
 
+	def self.get_request_json(request, shieldsquare_request_hash)
+		unless request.headers["REMOTE_ADDR"].blank?
+			shieldsquare_request_hash["i0"] = request.headers["REMOTE_ADDR"]
+		end
+		unless request.headers["X-Forwarded-For"].blank?
+			shieldsquare_request_hash["i1"] = request.headers["X-Forwarded-For"]
+		end
+		unless request.headers["HTTP_CLIENT_IP"].blank?
+			shieldsquare_request_hash["i2"] = request.headers["HTTP_CLIENT_IP"]
+		end
+		unless request.headers["HTTP_X_FORWARDED_FOR"].blank?
+			shieldsquare_request_hash["i3"] = request.headers["HTTP_X_FORWARDED_FOR"]
+		end
+		unless request.headers["x-real-ip"].blank?
+			shieldsquare_request_hash["i4"] = request.headers["x-real-ip"]
+		end
+		unless request.headers["HTTP_X_FORWARDED"].blank?
+			shieldsquare_request_hash["i5"] = request.headers["HTTP_X_FORWARDED"]
+		end
+		unless request.headers["Proxy-Client-IP"].blank?
+			shieldsquare_request_hash["i6"] = request.headers["Proxy-Client-IP"]
+		end
+		unless request.headers["WL-Proxy-Client-IP"].blank?
+			shieldsquare_request_hash["i7"] = request.headers["WL-Proxy-Client-IP"]
+		end
+		unless request.headers["HTTP_X_FORWARDED"].blank?
+			shieldsquare_request_hash["i8"] = request.headers["HTTP_X_FORWARDED"]
+		end
+		unless request.headers["HTTP_X_CLUSTER_CLIENT_IP"].blank?
+			shieldsquare_request_hash["i9"] = request.headers["HTTP_X_CLUSTER_CLIENT_IP"]
+		end
+		unless request.headers["HTTP_FORWARDED_FOR"].blank?
+			shieldsquare_request_hash["i10"] = request.headers["HTTP_FORWARDED_FOR"]
+		end
+		unless request.headers["HTTP_FORWARDED"].blank?
+			shieldsquare_request_hash["i11"] = request.headers["HTTP_FORWARDED"]
+		end
+		unless request.headers["HTTP_VIA"].blank?
+			shieldsquare_request_hash["i12"] = request.headers["HTTP_VIA"]
+		end
+		unless request.headers["X-True-Client-IP"].blank?
+			shieldsquare_request_hash["i13"] = request.headers["X-True-Client-IP"]
+		end
+		unless request.remote_ip.blank?
+			shieldsquare_request_hash["il1"] = request.remote_ip
+		end
+		unless request.ip.blank?
+			shieldsquare_request_hash["il2"] = request.ip
+		end
+		unless @@_deployment_number.blank?
+			shieldsquare_request_hash["idn"] = @@_deployment_number
+		end
+		shieldsquare_request_hash.to_json
+	end
 	def self.microtime()
 		epoch_mirco = Time.now.to_f
 		epoch_full = Time.now.to_i

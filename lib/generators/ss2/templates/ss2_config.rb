@@ -18,13 +18,15 @@ Ss2.setup do |config|
 	#Asynchronous HTTP Data Post  
 	#Setting this value to true will reduce the page load time when you are in Monitor mode. 
 	#Note: Enable this only if you are hosting your applications on Linux environments. 
-	config.async_http_post = false
+	config.async_http_post = <%= @is_async%>
 
 	#* Timeout in Seconds or Milliseconds
 	config.timeout_value = 500
 
-	#* Enter the URL fo the JavaScript Data Collector
+	#* Enter the URL for the JavaScript Data Collector
 	config.js_url = '/getData'
 
 	config._ipaddr = "REMOTE_ADDR"
+
+	config._deployment_number = "deployment_number"
 end

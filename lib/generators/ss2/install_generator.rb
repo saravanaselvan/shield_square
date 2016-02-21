@@ -32,11 +32,13 @@ module Ss2
     	puts "   1. Monitor"
     	puts "   2. Active"
     	@mode = gets.chomp
+    	@is_async = true
     	case @mode
     	when 1
     		@mode = "Monitor"
     	when 2
     		@mode = "Active"
+    		@is_async = false
     	else
     		@mode = "Monitor"
     	end
