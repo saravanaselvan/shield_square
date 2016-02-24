@@ -7,7 +7,6 @@ module Ss2
     desc "Creates ss2_config initializer"
 
     def copy_initializer
-    	modes = ["Monitor", "Active"]
     	puts "Server name: "
     	puts "    1. Asia/India - ss_sa.shieldsquare.net"
     	puts "    2. North America - ss_scus.shieldsquare.net"
@@ -26,22 +25,10 @@ module Ss2
   		else
   			@server_name = "ss_sa.shieldsquare.net"
   		end
-    	print "Sid: "
-    	@sid = gets.chomp
-    	puts "Mode: "
-    	puts "   1. Monitor"
-    	puts "   2. Active"
-    	@mode = gets.chomp
-    	@is_async = true
-    	case @mode
-    	when 1
-    		@mode = "Monitor"
-    	when 2
-    		@mode = "Active"
-    		@is_async = false
-    	else
-    		@mode = "Monitor"
-    	end
+    	print "Development/Staging Sid: "
+    	@staging_sid = gets.chomp
+      print "Production Sid: "
+      @prod_sid = gets.chomp
       template '../templates/ss2_config.rb', 'config/initializers/ss2_config.rb'
     end
   end

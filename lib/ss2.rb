@@ -67,6 +67,11 @@ module Ss2
 	SHIELDSQUARE_CODES_FFD   = 4
 	SHIELDSQUARE_CODES_ALLOW_EXP = -1
 
+	# Call Types
+	PAGE_LOAD = 1
+	FORM_SUBMIT = 2
+	CAPTCHA_PAGE = 4
+	CAPTCHA_SUCCESS = 5
 	$IP_ADDRESS = ""
 
 	def self.shieldsquare_ValidateRequest( shieldsquare_username, shieldsquare_calltype, shieldsquare_pid, request, cookies ) 
@@ -149,21 +154,13 @@ module Ss2
 	end
 
 	def self.handle_active_mode(shieldsquare_response, url, payload, timeout)
-		shieldsquare_response_from_ss = shieldsquare_post_sync shieldsquare_service_url, shieldsquare_request.to_json,@@timeout_value
+		shieldsquare_response_from_ss = shieldsquare_post_sync url, payload, timeout
 		shieldsquare_response_from_ss = JSON.parse(shieldsquare_response_from_ss)
 		shieldsquare_response.dynamic_JS = shieldsquare_response_from_ss['dynamic_JS']
 		n = shieldsquare_response_from_ss['ssresp'].to_i
 		case n
-		when 0
-			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW
-		when 1
-			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_MONITOR
-		when 2
-			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_CAPTCHA
-		when 3
-			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_BLOCK
-		when 4
-			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_FFD
+		when 0..4
+			shieldsquare_response.responsecode = n
 		else
 			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW_EXP
 			shieldsquare_response.reason = shieldsquare_response_from_ss['output']
@@ -173,7 +170,7 @@ module Ss2
 	end
 
 	def self.handle_monitor_mode(shieldsquare_response, url, payload, timeout, shieldsquare_calltype)
-		if @@async_http_post == true || shieldsquare_calltype == 4 && shieldsquare_calltype == 5
+		if @@async_http_post == true || shieldsquare_calltype == 4 || shieldsquare_calltype == 5
 			shieldsquare_response_from_ss = shieldsquare_post_async url, payload, timeout
 			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW
 			shieldsquare_response.dynamic_JS = "var __uzdbm_c = 2+2"
