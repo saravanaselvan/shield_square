@@ -155,17 +155,21 @@ module Ss2
 
 	def self.handle_active_mode(shieldsquare_response, url, payload, timeout)
 		shieldsquare_response_from_ss = shieldsquare_post_sync url, payload, timeout
-		shieldsquare_response_from_ss = JSON.parse(shieldsquare_response_from_ss)
-		shieldsquare_response.dynamic_JS = shieldsquare_response_from_ss['dynamic_JS']
-		n = shieldsquare_response_from_ss['ssresp'].to_i
-		case n
-		when 0..4
-			shieldsquare_response.responsecode = n
+		unless shieldsquare_response_from_ss.blank?
+			shieldsquare_response_from_ss = JSON.parse(shieldsquare_response_from_ss)
+			shieldsquare_response.dynamic_JS = shieldsquare_response_from_ss['dynamic_JS']
+			n = shieldsquare_response_from_ss['ssresp'].to_i
+			case n
+			when 0..4
+				shieldsquare_response.responsecode = n
+			else
+				shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW_EXP
+				shieldsquare_response.reason = shieldsquare_response_from_ss['output']
+			end
 		else
 			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW_EXP
 			shieldsquare_response.reason = shieldsquare_response_from_ss['output']
 		end
-
 		shieldsquare_response
 	end
 
