@@ -84,9 +84,10 @@ module Ss2
 		shieldsquare_e = 5
 		shieldsquare_f = 10
 		shieldsquare_service_url = "http://" + @@ss2_domain + "/getRequestData"
+		shieldsquare_current_time = Time.now.to_i
 		$IP_ADDRESS = request.remote_ip
 
-		if @@timeout_value > 1000
+		if @@timeout_value > 2000
 			puts "Content-type: text/html"
 			puts ''
 			puts 'ShieldSquare Timeout cant be greater then 1000 Milli seconds'
@@ -107,10 +108,10 @@ module Ss2
 			shieldsquare_pid = shieldsquare_generate_pid @@sid
 		end
 
-		shieldsquare_request = ShieldsquareRequest.new(@@sid, shieldsquare_pid, request, $IP_ADDRESS, shieldsquare_calltype, shieldsquare_username, Time.now.to_i)
+		shieldsquare_request = ShieldsquareRequest.new(@@sid, shieldsquare_pid, request, $IP_ADDRESS, shieldsquare_calltype, shieldsquare_username, shieldsquare_current_time)
 		shieldsquare_response = ShieldsquareResponse.new(shieldsquare_pid, @@js_url)
 
-		if cookies['__uzma']!="" and (cookies['__uzma'].to_s).length > 3
+		if is_cookie_set(cookies['__uzma']) && is_cookie_set(cookies['__uzmb']) && is_cookie_set(cookies['__uzmc']) && is_cookie_set(cookies['__uzmd'])
 			shieldsquare_lastaccesstime =  cookies['__uzmd']
 			shieldsquare_uzmc=0
 			shieldsquare_uzmc= cookies['__uzmc']
@@ -118,11 +119,9 @@ module Ss2
 			shieldsquare_a = ((shieldsquare_uzmc.to_i-shieldsquare_c)/shieldsquare_b) + shieldsquare_d
 			shieldsquare_uzmc= rand(shieldsquare_low..shieldsquare_high).to_s + (shieldsquare_c+shieldsquare_a*shieldsquare_b).to_s + rand(shieldsquare_low..shieldsquare_high).to_s
 			cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
-			cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
 			shieldsquare_request.__uzma = cookies["__uzma"]
 			shieldsquare_request.__uzmb = cookies["__uzmb"]
 			shieldsquare_request.__uzmc = shieldsquare_uzmc
-			shieldsquare_request.__uzmd = shieldsquare_lastaccesstime
 		else
 			id = DateTime.now.strftime('%Q')
 			shieldsquare_uzma = id.to_i(36).to_s
@@ -131,13 +130,12 @@ module Ss2
 			cookies[:__uzma] = { :value => shieldsquare_uzma, :expires => Time.now + 3600*24*365*10} 
 			cookies[:__uzmb] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
 			cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
-			cookies[:__uzmd] = { :value => Time.now.to_i.to_s, :expires => Time.now + 3600*24*365*10} 
 			shieldsquare_request.__uzma = shieldsquare_uzma
 			shieldsquare_request.__uzmb = Time.now.to_i
 			shieldsquare_request.__uzmc = shieldsquare_uzmc
-			shieldsquare_request.__uzmd = shieldsquare_lastaccesstime
 		end
-
+		cookies[:__uzmd] = { :value => shieldsquare_current_time.to_s, :expires => Time.now + 3600*24*365*10} 
+		shieldsquare_request.__uzmd = shieldsquare_current_time.to_s
 		if @@mode == 'Active' && (shieldsquare_calltype != 4 && shieldsquare_calltype != 5)
 			shieldsquare_request._zpsbd0 = true;
 			shieldsquare_request_hash = JSON.parse(shieldsquare_request.to_json)
@@ -203,17 +201,27 @@ module Ss2
 
 	def self.shieldsquare_post_sync(url, payload, timeout)
 		# Sendind the Data to the ShieldSquare Server
-		params=payload
-		headers={}
-		headers['Content-Type']='application/json'
-		headers['Accept']='application/json'
+		params = payload
+		headers = Hash['Content-Type'=>'application/json', 'Accept'=>'application/json']
+		unless timeout.blank?
+			timeout = timeout.to_f / 1000
+		else
+			timeout = 1
+		end		
 		begin
-			response = HTTParty.post(url, :body => params,:headers => headers, :timeout => timeout)
+			response = HTTParty.post(url.to_s, :body => params.to_json,:headers => headers, :timeout => timeout)
+			if response.code != 200
+				response = nil
+			end
 		rescue Exception => e
-			response = nil
+			response=nil
 		end
-		response
+		response	
 	end
+
+	def self.is_cookie_set(cookie)
+		!cookie.nil? && !cookie.empty?
+	end	
 
 	def self.get_request_json(request, shieldsquare_request_hash)
 		unless request.headers["REMOTE_ADDR"].blank?
