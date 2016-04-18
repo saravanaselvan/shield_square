@@ -54,6 +54,9 @@ module Ss2
 	mattr_accessor :js_url
 	mattr_accessor :_ipaddr
 	mattr_accessor :_deployment_number
+	mattr_accessor :domain_ttl
+	mattr_accessor :domain_cache_file
+
 
   def self.setup
     yield self
@@ -83,7 +86,7 @@ module Ss2
 		shieldsquare_d = 1
 		shieldsquare_e = 5
 		shieldsquare_f = 10
-		shieldsquare_service_url = "http://" + @@ss2_domain + "/getRequestData"
+		shieldsquare_service_url = "http://" + get_domain_ip(@@ss2_domain) + "/getRequestData"
 		shieldsquare_current_time = Time.now.to_i
 		$IP_ADDRESS = request.remote_ip
 
@@ -277,6 +280,50 @@ module Ss2
 		end
 		shieldsquare_request_hash.to_json
 	end
+
+	def self.get_domain_ip(host)
+		result = ""
+		cache_loaded_time = 0
+
+		ttl = @@domain_ttl
+		file_path = "#{@@domain_cache_file}ss_nr_cache"
+
+		if ttl == -1
+			host
+		end
+
+		unless File.exist?(file_path)
+			ip = load_domain_ip(host, file_path);
+		else
+			File.open(file_path, "r") do |opened_file|
+				result = opened_file.read
+				cache_loaded_time = opened_file.mtime
+			end
+			if result == nil || result.length == 0
+				ip = load_domain_ip(host, file_path);
+			else
+				if (Time.now - cache_loaded_time) > ttl
+					ip = load_domain_ip(host, file_path);
+				else
+					ip = result
+				end
+			end
+		end
+		ip
+	end
+
+	def self.load_domain_ip(host, file_path)
+		ip = Resolv.getaddress(host)
+		begin
+			ip_cache_file = File.new(file_path, "w")
+			ip_cache_file.write(ip)
+			ip_cache_file.close
+		rescue => e
+			puts e
+		end
+		ip
+	end
+
 	def self.microtime()
 		epoch_mirco = Time.now.to_f
 		epoch_full = Time.now.to_i

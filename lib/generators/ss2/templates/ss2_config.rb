@@ -44,4 +44,22 @@ Ss2.setup do |config|
 	config._ipaddr = "REMOTE_ADDR"
 
 	config._deployment_number = "deployment_number"
+
+
+	# 
+	# Set the DNS cache time in seconds
+	# Default is one hour
+	# Set -1 to disable caching
+	# Note: To use this feature your application server [Apache/Nginx] 
+	# should have write access to folder specified in domain_cache_file. 
+	config.domain_ttl = 3600
+
+
+	# Set DNS Cache file path
+	# Default is /dev/shm/ folder.
+	# Note: To use this feature your application server [Apache/Nginx] 
+	# should have write access to folder specified. 
+	# Also add '/' in the end of the path 
+	# eg. /dev/shm/
+	config.domain_cache_file = '/dev/shm/'
 end
