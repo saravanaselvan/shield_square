@@ -19,13 +19,33 @@ module Ss2
 			@_zpsbd0 = false
 			@_zpsbd1 = sid
 			@_zpsbd2 = shieldsquare_pid
-			@_zpsbd3 = request.headers['HTTP_REFERER']
-			@_zpsbd4 = request.headers['REQUEST_URI']
-			@_zpsbd5 = request.session_options[:id]
+			@_zpsbd3 = if request.headers['HTTP_REFERER'].nil? || request.headers['HTTP_REFERER'].empty?
+				""
+			else
+				request.headers['HTTP_REFERER']
+			end
+			@_zpsbd4 = if request.headers['REQUEST_URI'].nil? || request.headers['REQUEST_URI'].empty?
+				""
+			else
+				request.headers['REQUEST_URI']
+			end
+			@_zpsbd5 = if request.session_options[:id].nil? || request.session_options[:id].empty?
+				""
+			else
+				request.session_options[:id]
+			end
 			@_zpsbd6 = ip_address
-			@_zpsbd7 = request.headers['HTTP_USER_AGENT']
+			@_zpsbd7 = if request.headers['HTTP_USER_AGENT'].nil? || request.headers['HTTP_USER_AGENT'].empty?
+				""
+			else
+				request.headers['HTTP_USER_AGENT']
+			end
 			@_zpsbd8 = shieldsquare_calltype
-			@_zpsbd9 = shieldsquare_username
+			@_zpsbd9 = if shieldsquare_username.nil? || shieldsquare_username.empty?
+				""
+			else
+				shieldsquare_username
+			end
 			@_zpsbda = current_time
 			@__uzma = ""
 			@__uzmb = 0
@@ -150,13 +170,15 @@ module Ss2
 			shieldsquare_request_json = get_request_json(request, shieldsquare_request_hash)
 			shieldsquare_response = handle_monitor_mode(shieldsquare_response, shieldsquare_service_url, shieldsquare_request_json, @@timeout_value, shieldsquare_calltype)
 		end
-
 		shieldsquare_response
 	end
 
 	def self.handle_active_mode(shieldsquare_response, url, payload, timeout)
 		shieldsquare_response_from_ss = shieldsquare_post_sync url, payload, timeout
-		unless shieldsquare_response_from_ss.blank?
+		if shieldsquare_response_from_ss.nil?
+			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW_EXP
+			shieldsquare_response.reason = "Request Timed Out/Server Not Reachable"
+		else
 			shieldsquare_response_from_ss = JSON.parse(shieldsquare_response_from_ss)
 			shieldsquare_response.dynamic_JS = shieldsquare_response_from_ss['dynamic_JS']
 			n = shieldsquare_response_from_ss['ssresp'].to_i
@@ -165,11 +187,8 @@ module Ss2
 				shieldsquare_response.responsecode = n
 			else
 				shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW_EXP
-				shieldsquare_response.reason = shieldsquare_response_from_ss['output']
+				shieldsquare_response.reason = "Request Timed Out/Server Not Reachable"
 			end
-		else
-			shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW_EXP
-			shieldsquare_response.reason = shieldsquare_response_from_ss['output']
 		end
 		shieldsquare_response
 	end
@@ -181,7 +200,7 @@ module Ss2
 			shieldsquare_response.dynamic_JS = "var __uzdbm_c = 2+2"
 		else
 			shieldsquare_response_from_ss = shieldsquare_post_sync url, payload, timeout
-			if shieldsquare_response_from_ss.blank?
+			if shieldsquare_response_from_ss.nil?
 				shieldsquare_response.responsecode = SHIELDSQUARE_CODES_ALLOW_EXP
 				shieldsquare_response.reason = "Request Timed Out/Server Not Reachable"
 			else
@@ -212,7 +231,7 @@ module Ss2
 			timeout = 1
 		end		
 		begin
-			response = HTTParty.post(url.to_s, :body => params.to_json,:headers => headers, :timeout => timeout)
+			response = HTTParty.post(url.to_s, :body => params,:headers => headers, :timeout => timeout)
 			if response.code != 200
 				response = nil
 			end
