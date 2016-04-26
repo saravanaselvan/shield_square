@@ -7,33 +7,18 @@ Ss2.setup do |config|
 	#Australia - ss_au.shieldsquare.net
 	config.ss2_domain = '<%= @server_name %>'
 
-	if Rails.env.production?
-		#Enter your SID
-		config.sid = "<%= @prod_sid %>"
+	#Enter your SID
+	config.sid = "<%= @sid %>"
 
-		#Please specify the mode in which you want to operate
-		#mode = 'Active'
-		#mode = 'Monitor'
-		config.mode = 'Active'
+	#Please specify the mode in which you want to operate
+	#mode = 'Active'
+	#mode = 'Monitor'
+	config.mode = 'Monitor'
 
-		#Asynchronous HTTP Data Post  
-		#Setting this value to true will reduce the page load time when you are in Monitor mode. 
-		#Note: Enable this only if you are hosting your applications on Linux environments. 
-		config.async_http_post = false
-	else
-		#Enter your SID
-		config.sid = "<%= @staging_sid %>"
-
-		#Please specify the mode in which you want to operate
-		#mode = 'Active'
-		#mode = 'Monitor'
-		config.mode = 'Monitor'
-
-		#Asynchronous HTTP Data Post  
-		#Setting this value to true will reduce the page load time when you are in Monitor mode. 
-		#Note: Enable this only if you are hosting your applications on Linux environments. 
-		config.async_http_post = true		
-	end
+	#Asynchronous HTTP Data Post  
+	#Setting this value to true will reduce the page load time when you are in Monitor mode. 
+	#Note: Enable this only if you are hosting your applications on Linux environments. 
+	config.async_http_post = true
 
 	#* Timeout in Seconds or Milliseconds
 	config.timeout_value = 500

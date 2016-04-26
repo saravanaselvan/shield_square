@@ -25,10 +25,8 @@ module Ss2
   		else
   			@server_name = "ss_sa.shieldsquare.net"
   		end
-    	print "Development/Staging Sid: "
-    	@staging_sid = gets.chomp
-      print "Production Sid: "
-      @prod_sid = gets.chomp
+      print "Sid: "
+      @sid = gets.chomp
       template '../templates/ss2_config.rb', 'config/initializers/ss2_config.rb'
     end
   end
