@@ -309,26 +309,26 @@ module Ss2
 
 		if ttl == -1
 			host
-		end
-
-		unless File.exist?(file_path)
-			ip = load_domain_ip(host, file_path);
 		else
-			File.open(file_path, "r") do |opened_file|
-				result = opened_file.read
-				cache_loaded_time = opened_file.mtime
-			end
-			if result == nil || result.length == 0
+			unless File.exist?(file_path)
 				ip = load_domain_ip(host, file_path);
 			else
-				if (Time.now - cache_loaded_time) > ttl
+				File.open(file_path, "r") do |opened_file|
+					result = opened_file.read
+					cache_loaded_time = opened_file.mtime
+				end
+				if result == nil || result.length == 0
 					ip = load_domain_ip(host, file_path);
 				else
-					ip = result
+					if (Time.now - cache_loaded_time) > ttl
+						ip = load_domain_ip(host, file_path);
+					else
+						ip = result
+					end
 				end
 			end
+			ip
 		end
-		ip
 	end
 
 	def self.load_domain_ip(host, file_path)
