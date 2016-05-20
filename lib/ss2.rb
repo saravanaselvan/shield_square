@@ -113,7 +113,7 @@ module Ss2
 		if @@timeout_value > 2000
 			puts "Content-type: text/html"
 			puts ''
-			puts 'ShieldSquare Timeout cant be greater then 1000 Milli seconds'
+			puts 'ShieldSquare Timeout cant be greater then 2000 Milli seconds'
 			exit
 		end	
 		
