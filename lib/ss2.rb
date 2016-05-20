@@ -138,7 +138,7 @@ module Ss2
 			shieldsquare_lastaccesstime =  cookies['__uzmd']
 			shieldsquare_uzmc=0
 			shieldsquare_uzmc= cookies['__uzmc']
-			shieldsquare_uzmc=shieldsquare_uzmc[shieldsquare_e..shieldsquare_e+1]
+			shieldsquare_uzmc=shieldsquare_uzmc[shieldsquare_e..shieldsquare_uzmc.length-shieldsquare_f]
 			shieldsquare_a = ((shieldsquare_uzmc.to_i-shieldsquare_c)/shieldsquare_b) + shieldsquare_d
 			shieldsquare_uzmc= rand(shieldsquare_low..shieldsquare_high).to_s + (shieldsquare_c+shieldsquare_a*shieldsquare_b).to_s + rand(shieldsquare_low..shieldsquare_high).to_s
 			cookies[:__uzmc] = { :value => shieldsquare_uzmc, :expires => Time.now + 3600*24*365*10} 
